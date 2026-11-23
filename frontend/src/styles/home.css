@@ -348,19 +348,21 @@
   .brand__mark { width: 34px; height: 42px; }
   /* Phones: the photo fills the screen; all content sits at the top under the
      bar, and the lower part of the photo (the lit courtyard) stays clear. */
-  .hero { min-height: 100vh; min-height: max(560px, 100svh); display: flex; flex-direction: column; justify-content: center; padding-top: calc(var(--nav-h) + 16px); }
-  .hero__inner { align-self: stretch; padding-top: 0; padding-bottom: 18px; }
+  .hero { min-height: 100vh; min-height: max(560px, 100svh); display: flex; flex-direction: column; justify-content: flex-start; padding-top: var(--nav-h); }
+  .hero::before { content: ''; flex: 7 1 0; min-height: 28px; }
+  .hero::after { content: ''; flex: 3 1 0; min-height: 20px; }
+  .hero__inner { align-self: stretch; padding-top: 0; padding-bottom: 22px; }
   .hero__title { font-size: clamp(2.9rem, 15.5vw, 4rem); }
   .hero__media::after { background: linear-gradient(180deg, rgba(21, 27, 18, 0.84) 0%, rgba(21, 27, 18, 0.76) 50%, rgba(21, 27, 18, 0.66) 82%, rgba(21, 27, 18, 0.3) 100%); }
   .hero__sub { margin-top: 16px; font-size: 1.12rem; }
-  .hero__note { display: none; }
-  .hero__actions { flex-wrap: nowrap; gap: 10px; margin-top: 22px; }
-  .hero__actions .btn { flex: 1 1 0; min-width: 0; min-height: 46px; padding: 0 12px; gap: 8px; font-size: 0.95rem; }
+  .hero__note { font-size: 0.97rem; }
+  .hero__actions { margin-top: 24px; }
+  .hero__actions .btn { flex: 1 1 100%; }
   /* Info as a neat list right under the buttons: one icon column, one text column */
   .hero__foot { background: transparent; border-top: 0; }
   .hero__foot-row {
-    display: grid; grid-template-columns: 1fr; row-gap: 8px; min-height: 0;
-    padding-block: 14px 0; border-top: 1px solid rgba(238, 241, 235, 0.2); font-size: 0.95rem;
+    display: grid; grid-template-columns: 1fr; row-gap: 12px; min-height: 0;
+    padding-block: 18px 0; border-top: 1px solid rgba(238, 241, 235, 0.2); font-size: 0.97rem;
   }
   .hero__foot-row > * { display: flex; align-items: center; gap: 12px; margin: 0; }
   .hero__foot-row .status__dot { margin-inline: 4px; }
