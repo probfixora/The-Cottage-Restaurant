@@ -3,6 +3,7 @@ import { ArrowDown } from 'lucide-react';
 import { gsap, useGSAP } from '../lib/gsap.js';
 import { counters } from '../data/site.js';
 import { scrollToTarget } from '../lib/scroll.js';
+import { photo } from '../lib/photo.js';
 
 export default function Counters({ onPickMenu }) {
   const root = useRef(null);
@@ -43,7 +44,7 @@ export default function Counters({ onPickMenu }) {
 
         <div className="counters__frame arch" aria-hidden="true">
           {counters.map((c, i) => (
-            <img key={c.id} src={c.image} alt="" loading="lazy" className={i === active ? 'is-active' : i === prev ? 'is-prev' : ''} />
+            <img key={c.id} {...photo(c.image)} sizes="40vw" alt="" loading="lazy" decoding="async" className={i === active ? 'is-active' : i === prev ? 'is-prev' : ''} />
           ))}
         </div>
 
@@ -62,7 +63,7 @@ export default function Counters({ onPickMenu }) {
                   <span className="counter__title">{c.title}</span>
                 </button>
                 <div className="counter__body" id={`counter-${c.id}`} hidden={!isActive}>
-                  <img className="counter__photo" src={c.image} alt={c.alt} loading="lazy" />
+                  <img className="counter__photo" {...photo(c.image)} sizes="92vw" alt={c.alt} loading="lazy" decoding="async" />
                   <p>{c.text}</p>
                   <p className="counter__good">
                     <strong>Good for:</strong> {c.good}

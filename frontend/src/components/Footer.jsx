@@ -12,24 +12,18 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="container">
-        {/* SVG wordmark: scales with the screen and can never be cut off. */}
-        <svg className="footer__word" viewBox="0 0 820 178" role="img" aria-label="The Cottage">
-          <text x="410" y="136" textAnchor="middle">
-            The Cottage
-          </text>
-        </svg>
-
         <div className="footer__grid">
           <div className="footer__brand">
             <ArchMark className="footer__mark" />
             <p>
               Restaurant, bakery and Tribhog sweets.
               <br />
-              Pure vegetarian, Lucknow.
+              Pure vegetarian, on Sultanpur Road, Lucknow.
             </p>
           </div>
 
-          <nav className="footer__nav" aria-label="Footer">
+          <nav className="footer__nav" aria-labelledby="footer-explore">
+            <h2 className="footer__heading" id="footer-explore">Explore</h2>
             {navLinks.map((l) => (
               <a key={l.href} href={l.href} onClick={(e) => go(e, l.href)}>
                 {l.label}
@@ -41,6 +35,7 @@ export default function Footer() {
           </nav>
 
           <div className="footer__contact">
+            <h2 className="footer__heading">Visit and contact</h2>
             <a href={site.phoneHref}>
               <Phone size={17} strokeWidth={1.8} aria-hidden="true" /> {site.phoneDisplay}
             </a>
@@ -50,6 +45,7 @@ export default function Footer() {
             <a href={site.instagram} target="_blank" rel="noopener noreferrer">
               <InstagramIcon size={17} /> {site.instagramHandle}
             </a>
+            <p className="footer__hours">{site.hoursText}</p>
           </div>
         </div>
 
@@ -59,6 +55,13 @@ export default function Footer() {
             Staff login
           </Link>
         </div>
+
+        {/* The name closes the page. SVG text scales with the screen and is never cut off. */}
+        <svg className="footer__word" viewBox="0 0 820 178" role="img" aria-label="The Cottage">
+          <text x="410" y="136" textAnchor="middle">
+            The Cottage
+          </text>
+        </svg>
       </div>
     </footer>
   );

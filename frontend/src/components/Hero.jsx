@@ -16,24 +16,43 @@ export default function Hero() {
         // The one signature moment: the night photo opens out of an arch,
         // the way the hall's doorways frame the courtyard.
         const split = SplitText.create('.hero__title', { type: 'lines,chars', mask: 'lines' });
-        const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+        const tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out', force3D: true } });
         tl.from('.hero__media', {
           clipPath: 'inset(14% 34% 0% 34% round 600px 600px 0px 0px)',
-          duration: 1.6,
-          ease: 'expo.inOut',
+          duration: 1.5,
+          ease: 'power3.inOut',
         })
-          .from('.hero__media img', { scale: 1.18, duration: 2.2 }, '<0.1')
-          .from(split.chars, { yPercent: 110, duration: 1.1, stagger: 0.035 }, '-=1.15')
-          .from('.hero__reveal', { autoAlpha: 0, y: 18, duration: 0.9, stagger: 0.08 }, '-=0.8');
+          .from('.hero__media img', { scale: 1.14, duration: 2 }, '<')
+          .from(split.chars, { yPercent: 110, duration: 1, stagger: 0.03 }, '-=1.05')
+          .from('.hero__reveal', { autoAlpha: 0, y: 16, duration: 0.8, stagger: 0.07 }, '-=0.75')
+          .add(() => root.current?.classList.add('is-ready'));
+
+        // Start only once the photo is decoded, so the reveal never stutters
+        // while the browser is still unpacking a large image (max 1.2 s wait).
+        const img = root.current.querySelector('.hero__media img');
+        const decoded = img.decode ? img.decode().catch(() => {}) : Promise.resolve();
+        const timeout = new Promise((r) => setTimeout(r, 1200));
+        Promise.race([decoded, timeout]).then(() => tl.play());
 
         // Quiet scroll response: the photo settles back as the page moves on.
-        gsap.to('.hero__media img', {
-          scale: 1.08,
-          yPercent: 6,
-          ease: 'none',
-          scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true },
-        });
-        return () => split.revert();
+        // Runs on the <picture> wrapper, so it never fights the intro's zoom on the <img>.
+        const drift = gsap.fromTo(
+          '.hero__media picture',
+          { scale: 1, yPercent: 0 },
+          {
+            scale: 1.06,
+            yPercent: 5,
+            ease: 'none',
+            force3D: true,
+            immediateRender: false,
+            scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: 0.4 },
+          },
+        );
+        return () => {
+          tl.kill();
+          drift.kill();
+          split.revert();
+        };
       });
     },
     { scope: root },
@@ -48,9 +67,12 @@ export default function Hero() {
     <section className="hero" ref={root} aria-labelledby="hero-title">
       <div className="hero__media">
         <picture>
-          <source media="(max-width: 760px)" srcSet="/images/entrance-doors.webp" />
+          <source media="(max-width: 760px)" srcSet="/images/entrance-doors-720.webp 720w, /images/entrance-doors.webp 1200w" sizes="100vw" />
           <img
             src="/images/entrance-wide.webp"
+            srcSet="/images/entrance-wide-1600.webp 1600w, /images/entrance-wide.webp 2400w"
+            sizes="100vw"
+            decoding="async"
             alt="The Cottage’s glass doors open onto a courtyard strung with warm lights at night"
             fetchpriority="high"
           />

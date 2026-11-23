@@ -48,12 +48,41 @@ export const counters = [
 ];
 
 export const spaces = [
-  { image: '/images/hall-chandelier.webp', title: 'The grand hall', shape: 'arch', alt: 'Vaulted grand hall with a brass chandelier and bakery counters' },
-  { image: '/images/exterior-wide.webp', title: 'The courtyard at night', shape: 'wide', alt: 'Courtyard lit with fairy lights and a red carpet at night' },
-  { image: '/images/lounge.webp', title: 'The lounge', shape: 'tall', alt: 'Lounge with chandelier and an arched doorway' },
-  { image: '/images/arch-corridor.webp', title: 'The arcade', shape: 'arch', alt: 'White arch with columns, a wall sconce and a potted plant' },
-  { image: '/images/entrance-doors.webp', title: 'The front doors', shape: 'tall', alt: 'Glass entrance doors opening onto the lit courtyard' },
-  { image: '/images/chandelier.webp', title: 'Brass light', shape: 'arch', alt: 'Brass chandelier under a white vault' },
+  {
+    image: '/images/exterior-wide.webp',
+    title: 'The courtyard',
+    text: 'Strung with lights from dusk, with a red-carpet walk up to the doors.',
+    shape: 'wide',
+    alt: 'Courtyard lit with fairy lights and a red carpet at night',
+  },
+  {
+    image: '/images/lounge.webp',
+    title: 'The lounge',
+    text: 'Softer light and quieter tables, made for long family dinners.',
+    shape: 'arch',
+    alt: 'Lounge with a brass chandelier and an arched doorway',
+  },
+  {
+    image: '/images/arch-corridor.webp',
+    title: 'The arcade',
+    text: 'White arches and columns linking the rooms, with greenery in every bay.',
+    shape: 'arch',
+    alt: 'White arch with columns, a wall sconce and a potted plant',
+  },
+  {
+    image: '/images/exterior-night.webp',
+    title: 'The evening welcome',
+    text: 'An arch of fairy lights frames the way in from the gate.',
+    shape: 'arch',
+    alt: 'An arch of fairy lights over the red carpet leading to the entrance at night',
+  },
+  {
+    image: '/images/arch-light.webp',
+    title: 'Afternoon light',
+    text: 'The arched windows cast their shape across the striped walls.',
+    shape: 'arch',
+    alt: 'Light through an arched window falling across the sage-striped wall',
+  },
 ];
 
 // Real Google reviews of The Cottage (first name and initial only).
@@ -72,7 +101,7 @@ export const reviews = [
   },
   {
     quote: 'Food quality and taste is excellent, and the price is also reasonable.',
-    name: 'Google reviewer',
+    name: 'A guest',
   },
 ];
 

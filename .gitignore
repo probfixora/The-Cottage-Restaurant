@@ -30,3 +30,6 @@ _old-version/
 .DS_Store
 Thumbs.db
 *.log
+
+# Production secrets (copy into Cloudflare, then delete this file)
+CLOUDFLARE-SECRETS.txt

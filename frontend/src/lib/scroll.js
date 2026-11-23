@@ -4,9 +4,15 @@ import { gsap, ScrollTrigger, prefersReducedMotion } from './gsap.js';
 
 let lenis = null;
 
+// Phones: the address bar showing/hiding resizes the viewport; don't recalculate
+// every scroll animation each time (that is what causes jumps mid-scroll).
+ScrollTrigger.config({ ignoreMobileResize: true });
+
 export function startSmoothScroll() {
   if (lenis || prefersReducedMotion()) return () => {};
-  lenis = new Lenis({ lerp: 0.11, smoothWheel: true });
+  // Touch screens already scroll smoothly on their own; Lenis is only for mouse wheels.
+  if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return () => {};
+  lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 0.9, smoothWheel: true });
   lenis.on('scroll', ScrollTrigger.update);
   const tick = (time) => lenis.raf(time * 1000);
   gsap.ticker.add(tick);
