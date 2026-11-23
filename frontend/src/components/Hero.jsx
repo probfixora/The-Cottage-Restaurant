@@ -84,7 +84,10 @@ export default function Hero() {
           The Cottage
         </h1>
         <p className="hero__sub hero__reveal">
-          Restaurant, bakery and mithai by Tribhog. Pure vegetarian, on Sultanpur Road in Lucknow.
+          A pure vegetarian restaurant, bakery and Tribhog mithai house on Sultanpur Road, Lucknow.
+        </p>
+        <p className="hero__note hero__reveal">
+          Long family dinners under brass chandeliers, celebration cakes made to order, and fresh sweets to take home.
         </p>
         <div className="hero__actions hero__reveal">
           <a href="#book" className="btn btn--brass" onClick={(e) => go(e, '#book')}>
