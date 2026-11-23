@@ -12,6 +12,13 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="container">
+        {/* The name opens the footer. SVG text scales with the screen and is never cut off. */}
+        <svg className="footer__word" viewBox="0 0 820 178" role="img" aria-label="The Cottage">
+          <text x="410" y="136" textAnchor="middle">
+            The Cottage
+          </text>
+        </svg>
+
         <div className="footer__grid">
           <div className="footer__brand">
             <ArchMark className="footer__mark" />
@@ -48,14 +55,6 @@ export default function Footer() {
             <p className="footer__hours">{site.hoursText}</p>
           </div>
         </div>
-
-        {/* The name, then a thin line, the copyright, and staff login last.
-            SVG text scales with the screen and is never cut off. */}
-        <svg className="footer__word" viewBox="0 0 820 178" role="img" aria-label="The Cottage">
-          <text x="410" y="136" textAnchor="middle">
-            The Cottage
-          </text>
-        </svg>
 
         <div className="footer__base">
           <span>© {new Date().getFullYear()} The Cottage Restaurant &amp; Tribhog Sweets. All rights reserved.</span>

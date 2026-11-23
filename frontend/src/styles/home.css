@@ -266,7 +266,7 @@
 
 /* ---------- footer ---------- */
 .footer { background: var(--sage-950); color: var(--on-sage-soft); padding: clamp(64px, 8vw, 104px) 0 clamp(16px, 2vw, 28px); }
-.footer__word { display: block; width: 100%; height: auto; margin: clamp(40px, 6vw, 72px) 0 clamp(20px, 3vw, 32px); }
+.footer__word { display: block; width: 100%; height: auto; margin: 0 0 clamp(36px, 5vw, 64px); }
 .footer__heading { font-family: var(--font-body); font-size: 0.98rem; font-weight: 600; letter-spacing: 0.01em; color: var(--brass-light); margin-bottom: 6px; }
 .footer__hours { margin-top: 4px; }
 .footer__word text { font-family: var(--font-display); font-size: 150px; fill: var(--brass-light); }
@@ -279,7 +279,7 @@
 .footer a:hover { color: var(--brass-light); text-decoration: underline; }
 .footer__contact a { display: inline-flex; align-items: center; gap: 10px; width: fit-content; }
 .footer__contact svg { color: var(--brass-light); }
-.footer__base { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px 24px; padding-top: 20px; border-top: 1px solid rgba(238, 241, 235, 0.16); font-size: 0.92rem; }
+.footer__base { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px 24px; margin-top: clamp(40px, 5vw, 56px); padding-top: 20px; border-top: 1px solid rgba(238, 241, 235, 0.16); font-size: 0.92rem; }
 .footer__staff { color: var(--on-sage-soft) !important; }
 
 /* ---------- responsive ---------- */
