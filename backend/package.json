@@ -1,0 +1,25 @@
+{
+  "name": "the-cottage-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API for The Cottage by Tribhog: table bookings, guest messages, menu and admin panel.",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env --no-warnings=ExperimentalWarning --watch src/server.js",
+    "start": "node --env-file-if-exists=.env --no-warnings=ExperimentalWarning src/server.js",
+    "seed": "node --env-file-if-exists=.env --no-warnings=ExperimentalWarning src/seed.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.16",
+    "zod": "^3.23.8"
+  }
+}

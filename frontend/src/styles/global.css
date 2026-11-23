@@ -1,0 +1,128 @@
+/* =========================================================
+   The Cottage by Tribhog: shared tokens and base styles
+   World: the hall itself. Sage-striped walls, white plaster
+   arches, brass chandeliers, and the courtyard at night.
+   ========================================================= */
+
+:root {
+  /* colour */
+  --sage-950: #151b12;   /* night green: footer, gallery */
+  --sage-900: #1e2619;
+  --sage-800: #2d3826;
+  --sage-700: #3d4a35;   /* the wall stripe: main brand field */
+  --sage-650: #45533c;   /* the lighter stripe */
+  --sage-500: #6e7d60;
+  --sage-300: #a9b59b;
+  --sage-200: #c9d1bc;
+  --sage-100: #e3e8da;
+  --plaster: #eef1eb;    /* the arches: plaster white with the sage walls reflected in it */
+  --plaster-2: #e1e6dc;
+  --brass: #b48a3c;
+  --brass-light: #d8b46a;
+  --brass-dark: #6e5420;
+  --ink: #1e2619;
+  --ink-soft: #4a5641;   /* secondary text on plaster (7:1) */
+  --on-sage: #eef1eb;
+  --on-sage-soft: #cdd5c1; /* secondary text on sage-700 */
+  --veg: #2f8a3b;
+  --danger: #a3361f;
+
+  /* type */
+  --font-display: 'Rozha One', 'Times New Roman', serif;
+  --font-body: 'Hind', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --step-display: clamp(3.4rem, 9.5vw, 6rem);
+  --step-h2: clamp(2.2rem, 4.4vw, 3.6rem);
+  --step-h3: clamp(1.35rem, 2vw, 1.65rem);
+  --step-lede: clamp(1.15rem, 1.5vw, 1.3rem);
+
+  /* layout */
+  --gutter: clamp(20px, 4.5vw, 56px);
+  --maxw: 1240px;
+  --section-y: clamp(88px, 11vw, 152px);
+  --radius: 6px;
+  --arch: 999px 999px var(--radius) var(--radius);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --nav-h: 72px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: var(--nav-h); }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+body {
+  margin: 0;
+  background: var(--plaster);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img, svg, iframe { display: block; max-width: 100%; }
+a { color: inherit; text-underline-offset: 0.22em; text-decoration-thickness: 1px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.04; letter-spacing: -0.01em; text-wrap: balance; }
+p { text-wrap: pretty; }
+
+/* browser surfaces in the house palette */
+::selection { background: var(--brass-light); color: var(--sage-950); }
+:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; border-radius: 3px; }
+html { scrollbar-color: var(--sage-500) var(--plaster-2); }
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: var(--plaster-2); }
+::-webkit-scrollbar-thumb { background: var(--sage-500); border-radius: 10px; border: 2px solid var(--plaster-2); }
+input, textarea, select { caret-color: var(--brass-dark); accent-color: var(--sage-700); }
+
+.container { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip-link { position: fixed; left: 12px; top: -60px; z-index: 200; background: var(--brass-light); color: var(--sage-950); padding: 10px 16px; border-radius: var(--radius); font-weight: 600; transition: top 0.2s; }
+.skip-link:focus { top: 12px; }
+
+.h2 { font-size: var(--step-h2); }
+.lede { font-size: var(--step-lede); line-height: 1.55; max-width: 34ch; }
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 0 26px;
+  border: 1px solid transparent; border-radius: var(--radius);
+  font-size: 1rem; font-weight: 600; letter-spacing: 0.01em; line-height: 1;
+  text-decoration: none; white-space: nowrap;
+  transition: background-color 0.25s var(--ease-out), color 0.25s, border-color 0.25s, transform 0.25s var(--ease-out), box-shadow 0.25s;
+}
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.65; cursor: progress; }
+.btn--brass { background: var(--brass-light); color: var(--sage-950); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 4px 12px -6px rgba(0, 0, 0, 0.45); }
+.btn--brass:hover { background: #e4c482; }
+.btn--ghost { color: var(--plaster); border-color: rgba(238, 241, 235, 0.55); background: rgba(21, 27, 18, 0.25); }
+.btn--ghost:hover { background: var(--plaster); color: var(--sage-950); border-color: var(--plaster); }
+.btn--outline { color: var(--ink); border-color: var(--sage-500); }
+.btn--outline:hover { background: var(--sage-700); color: var(--on-sage); border-color: var(--sage-700); }
+.btn--sage { background: var(--sage-700); color: var(--on-sage); }
+.btn--sage:hover { background: var(--sage-800); }
+.btn--small { min-height: 42px; padding: 0 18px; font-size: 0.95rem; }
+.btn--wide { width: 100%; }
+
+.link-btn, .link-arrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 4px 0; border: 0; background: none;
+  font-weight: 600; color: var(--sage-700);
+  text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 0.3em;
+}
+.link-btn:hover, .link-arrow:hover { color: var(--brass-dark); }
+
+.spin { animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.page-loading { min-height: 100vh; display: grid; place-items: center; color: var(--ink-soft); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}

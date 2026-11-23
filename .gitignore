@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Secrets: never commit real passwords or keys
+.env
+.env.*
+!.env.example
+
+# Database (holds guest names and phone numbers)
+backend/data/
+*.db
+*.db-wal
+*.db-shm
+
+# Build output
+frontend/dist/
+/dist/
+
+# Old version (contains guest photos; kept only on this computer)
+_old-version/
+
+# Editor / tool settings
+.claude/
+.impeccable/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
