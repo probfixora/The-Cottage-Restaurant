@@ -23,7 +23,7 @@ export const counters = [
   {
     id: 'restaurant',
     title: 'Restaurant',
-    photo: 'g18',
+    photo: 'g05',
     alt: 'Dining tables seen through a white arch at The Cottage',
     text: 'A family dining hall under white vaults and brass light. Home-style North Indian plates, thalis and tandoor breads, all pure vegetarian.',
     good: 'Family lunches, birthday dinners, a long evening out',

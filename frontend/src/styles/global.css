@@ -38,7 +38,7 @@
   /* layout */
   --gutter: clamp(20px, 4.5vw, 56px);
   --maxw: 1240px;
-  --section-y: clamp(88px, 11vw, 152px);
+  --section-y: clamp(72px, 8vw, 120px);
   --radius: 6px;
   --arch: 999px 999px var(--radius) var(--radius);
 

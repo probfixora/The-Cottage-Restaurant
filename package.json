@@ -5,9 +5,9 @@
   "description": "The Cottage by Tribhog: React website (frontend/) and Cloudflare Worker API with D1 (backend/).",
   "scripts": {
     "build": "npm --prefix frontend ci && npm --prefix frontend run build",
-    "dev:api": "wrangler dev --port 8787",
+    "dev:api": "npm --prefix frontend run build && wrangler dev --port 8787",
     "dev:web": "npm --prefix frontend run dev",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm --prefix frontend run build && wrangler deploy"
   },
   "devDependencies": {
     "wrangler": "4.166.0"

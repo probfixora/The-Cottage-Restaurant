@@ -13,7 +13,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="container">
         {/* The name opens the footer. SVG text scales with the screen and is never cut off. */}
-        <svg className="footer__word" viewBox="0 0 820 178" role="img" aria-label="The Cottage">
+        <svg className="footer__word" viewBox="0 28 820 150" role="img" aria-label="The Cottage">
           <text x="410" y="136" textAnchor="middle">
             The Cottage
           </text>
