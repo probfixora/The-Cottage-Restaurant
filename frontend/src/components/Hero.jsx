@@ -80,6 +80,7 @@ export default function Hero() {
       </div>
 
       <div className="container hero__inner">
+        <p className="hero__tagline hero__reveal">A place to savour, a place to belong</p>
         <h1 className="hero__title" id="hero-title">
           The Cottage
         </h1>
