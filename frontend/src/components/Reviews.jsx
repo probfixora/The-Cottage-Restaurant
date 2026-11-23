@@ -29,7 +29,7 @@ export default function Reviews() {
             ))}
           </div>
           <h2 className="h2" id="reviews-title">
-            Rated {site.rating} by {site.reviewCount} guests on Google
+            Rated {site.rating} by our guests on Google
           </h2>
           <a className="link-arrow" href={site.googleListing} target="_blank" rel="noopener noreferrer">
             Read every review on Google

@@ -106,7 +106,7 @@ export default function Hero() {
           </span>
           <a className="hero__rating" href={site.googleListing} target="_blank" rel="noopener noreferrer">
             <Star size={15} fill="currentColor" strokeWidth={0} aria-hidden="true" />
-            {site.rating} from {site.reviewCount} Google reviews
+            Rated {site.rating} on Google
           </a>
           <a className="hero__phone" href={site.phoneHref}>
             {site.phoneDisplay}

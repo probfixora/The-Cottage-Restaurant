@@ -41,6 +41,17 @@ export function scrollToTarget(hash) {
   }
 }
 
+/** Bring an element just below the fixed bar, but only if it isn't already comfortably in view. */
+export function revealElement(el) {
+  if (!el) return;
+  const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 72;
+  const top = el.getBoundingClientRect().top;
+  if (top >= navH + 8 && top <= window.innerHeight * 0.55) return;
+  const y = top + window.scrollY - navH - 12;
+  if (lenis) lenis.scrollTo(y, { duration: 0.8 });
+  else window.scrollTo({ top: y, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+}
+
 export function setScrollLocked(locked) {
   if (lenis) (locked ? lenis.stop() : lenis.start());
   document.documentElement.style.overflow = locked ? 'hidden' : '';

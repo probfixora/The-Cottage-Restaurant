@@ -16,7 +16,6 @@ export const site = {
   openMinutes: 9 * 60,
   closeMinutes: 23 * 60 + 30,
   rating: 4.8,
-  reviewCount: 31,
   priceText: '₹200–400 per person',
 };
 
@@ -24,7 +23,7 @@ export const counters = [
   {
     id: 'restaurant',
     title: 'Restaurant',
-    image: '/images/arch-view.webp',
+    photo: 'g18',
     alt: 'Dining tables seen through a white arch at The Cottage',
     text: 'A family dining hall under white vaults and brass light. Home-style North Indian plates, thalis and tandoor breads, all pure vegetarian.',
     good: 'Family lunches, birthday dinners, a long evening out',
@@ -32,7 +31,7 @@ export const counters = [
   {
     id: 'bakery',
     title: 'Bakery',
-    image: '/images/bakery-counter.webp',
+    photo: 'g09',
     alt: 'Long glass bakery counters beneath the vaulted ceiling',
     text: 'Glass counters of cakes, pastries and tea-time bakes. Celebration cakes are made to order: tell us the day and the size.',
     good: 'Birthday cakes, office treats, something with your chai',
@@ -40,49 +39,36 @@ export const counters = [
   {
     id: 'sweets',
     title: 'Tribhog Sweets',
-    image: '/images/grand-hall.webp',
+    photo: 'g06',
     alt: 'Festive hampers on a sage-draped table in the grand hall',
     text: 'Tribhog’s mithai counter: traditional Lucknow sweets made fresh, plus boxed hampers for weddings, festivals and gifting.',
     good: 'Festivals, wedding orders, gift boxes',
   },
 ];
 
-export const spaces = [
-  {
-    image: '/images/exterior-wide.webp',
-    title: 'The courtyard',
-    text: 'Strung with lights from dusk, with a red-carpet walk up to the doors.',
-    shape: 'wide',
-    alt: 'Courtyard lit with fairy lights and a red carpet at night',
-  },
-  {
-    image: '/images/lounge.webp',
-    title: 'The lounge',
-    text: 'Softer light and quieter tables, made for long family dinners.',
-    shape: 'arch',
-    alt: 'Lounge with a brass chandelier and an arched doorway',
-  },
-  {
-    image: '/images/arch-corridor.webp',
-    title: 'The arcade',
-    text: 'White arches and columns linking the rooms, with greenery in every bay.',
-    shape: 'arch',
-    alt: 'White arch with columns, a wall sconce and a potted plant',
-  },
-  {
-    image: '/images/exterior-night.webp',
-    title: 'The evening welcome',
-    text: 'An arch of fairy lights frames the way in from the gate.',
-    shape: 'arch',
-    alt: 'An arch of fairy lights over the red carpet leading to the entrance at night',
-  },
-  {
-    image: '/images/arch-light.webp',
-    title: 'Afternoon light',
-    text: 'The arched windows cast their shape across the striped walls.',
-    shape: 'arch',
-    alt: 'Light through an arched window falling across the sage-striped wall',
-  },
+// Gallery photos: all the same 4:5 size, from the Google Maps listing.
+// To add one: put gNN.webp (960x1200) and gNN-480.webp (480x600) in public/images/gallery
+// and add a line here.
+export const gallery = [
+  { id: 'g01', title: 'The front doors', alt: 'Glass doors of The Cottage opening onto the lit courtyard at night' },
+  { id: 'g02', title: 'The courtyard at night', alt: 'Courtyard strung with fairy lights, with a red carpet to the entrance' },
+  { id: 'g03', title: 'The red-carpet welcome', alt: 'Red carpet leading under a flowered arch to the front doors' },
+  { id: 'g04', title: 'Lights over the courtyard', alt: 'Strings of warm lights over courtyard tables, seen through the doors' },
+  { id: 'g05', title: 'The grand hall', alt: 'The vaulted grand hall with a brass chandelier and festive hampers' },
+  { id: 'g06', title: 'Festive hampers', alt: 'Gift hampers on a table draped in sage satin' },
+  { id: 'g07', title: 'Brass under the vault', alt: 'A brass chandelier hanging from the white vaulted ceiling' },
+  { id: 'g08', title: 'The bakery counters', alt: 'Long glass bakery counters under lit arched niches' },
+  { id: 'g09', title: 'Fresh from the bakery', alt: 'Close view of the glass counters filled with bakes and sweets' },
+  { id: 'g10', title: 'Lit arches above the counters', alt: 'Softly lit arched niches with shelves above the bakery counters' },
+  { id: 'g11', title: 'The vaulted ceiling', alt: 'White vaulted ceiling with a chandelier over the hall' },
+  { id: 'g12', title: 'Columns and sage stripes', alt: 'A white column wrapped in leaves beside a sage-striped arch' },
+  { id: 'g13', title: 'The brass chandelier', alt: 'Close view of a brass chandelier with glass shades' },
+  { id: 'g14', title: 'White columns', alt: 'White columns and arches beneath the vault' },
+  { id: 'g15', title: 'The lounge', alt: 'The lounge with a chandelier and an arched doorway' },
+  { id: 'g16', title: 'Lounge lights', alt: 'A chandelier in the lounge ceiling medallion' },
+  { id: 'g17', title: 'The arcade', alt: 'White arch with columns, a wall sconce and a potted plant' },
+  { id: 'g18', title: 'Through the arch', alt: 'The dining room and counters seen through a white arch' },
+  { id: 'g19', title: 'Afternoon light', alt: 'Light through an arched window falling across the sage-striped wall' },
 ];
 
 // Real Google reviews of The Cottage (first name and initial only).

@@ -49,19 +49,20 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="footer__base">
-          <span>© {new Date().getFullYear()} The Cottage Restaurant &amp; Tribhog Sweets</span>
-          <Link to="/admin" className="footer__staff">
-            Staff login
-          </Link>
-        </div>
-
-        {/* The name closes the page. SVG text scales with the screen and is never cut off. */}
+        {/* The name, then a thin line, the copyright, and staff login last.
+            SVG text scales with the screen and is never cut off. */}
         <svg className="footer__word" viewBox="0 0 820 178" role="img" aria-label="The Cottage">
           <text x="410" y="136" textAnchor="middle">
             The Cottage
           </text>
         </svg>
+
+        <div className="footer__base">
+          <span>© {new Date().getFullYear()} The Cottage Restaurant &amp; Tribhog Sweets. All rights reserved.</span>
+          <Link to="/admin" className="footer__staff">
+            Staff login
+          </Link>
+        </div>
       </div>
     </footer>
   );
