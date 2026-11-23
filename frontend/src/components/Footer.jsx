@@ -57,7 +57,7 @@ export default function Footer() {
         </div>
 
         <div className="footer__base">
-          <span>© {new Date().getFullYear()} The Cottage Restaurant &amp; Tribhog Sweets. All rights reserved.</span>
+          <span>Copyright © {new Date().getFullYear()} The Cottage Restaurant &amp; Tribhog Sweets. All rights reserved.</span>
           <Link to="/admin" className="footer__staff">
             Staff login
           </Link>
