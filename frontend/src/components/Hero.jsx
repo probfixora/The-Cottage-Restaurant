@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { ArrowRight, Navigation, Star } from 'lucide-react';
+import { ArrowRight, Navigation, Star, Phone } from 'lucide-react';
 import { gsap, SplitText, useGSAP } from '../lib/gsap.js';
 import { site } from '../data/site.js';
 import { scrollToTarget } from '../lib/scroll.js';
@@ -112,6 +112,7 @@ export default function Hero() {
             Rated {site.rating} on Google
           </a>
           <a className="hero__phone" href={site.phoneHref}>
+            <Phone size={15} strokeWidth={2} aria-hidden="true" />
             {site.phoneDisplay}
           </a>
         </div>

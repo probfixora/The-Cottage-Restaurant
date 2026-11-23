@@ -79,7 +79,8 @@
 .hero__rating { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
 .hero__rating svg { color: var(--brass-light); }
 .hero__rating:hover, .hero__phone:hover { color: var(--plaster); text-decoration: underline; }
-.hero__phone { margin-left: auto; text-decoration: none; font-weight: 500; }
+.hero__phone { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 500; }
+.hero__phone svg { color: var(--brass-light); }
 
 /* ---------- story ---------- */
 .story { padding-block: var(--section-y); }
@@ -345,24 +346,26 @@
   .brand__name { font-size: 1.72rem; }
   .brand__by { font-size: 0.95rem; margin-top: 5px; }
   .brand__mark { width: 34px; height: 42px; }
-  /* Phones: the hero fills exactly one screen (svh follows the browser bars),
-     so the next section never peeks in under it. */
-  .hero { min-height: 100vh; min-height: max(560px, 100svh); }
-  .hero__inner { padding-top: calc(var(--nav-h) + 24px); padding-bottom: 24px; }
+  /* Phones: the photo fills the screen; all content sits at the top under the
+     bar, and the lower part of the photo (the lit courtyard) stays clear. */
+  .hero { min-height: 100vh; min-height: max(560px, 100svh); display: flex; flex-direction: column; justify-content: flex-start; }
+  .hero__inner { align-self: stretch; padding-top: calc(var(--nav-h) + 36px); padding-bottom: 22px; }
   .hero__title { font-size: clamp(2.9rem, 15.5vw, 4rem); }
-  /* Text sits higher on phones, so the shade starts higher to keep it readable */
-  .hero__media::after { background: linear-gradient(180deg, rgba(21, 27, 18, 0.6) 0%, rgba(21, 27, 18, 0.15) 16%, rgba(21, 27, 18, 0.58) 34%, rgba(21, 27, 18, 0.78) 62%, rgba(21, 27, 18, 0.94) 100%); }
+  .hero__media::after { background: linear-gradient(180deg, rgba(21, 27, 18, 0.84) 0%, rgba(21, 27, 18, 0.76) 50%, rgba(21, 27, 18, 0.66) 82%, rgba(21, 27, 18, 0.3) 100%); }
   .hero__sub { margin-top: 16px; font-size: 1.12rem; }
   .hero__note { font-size: 0.97rem; }
   .hero__actions { margin-top: 24px; }
-  .hero__inner { padding-bottom: 28px; }
   .hero__actions .btn { flex: 1 1 auto; }
+  /* Info as a neat list right under the buttons: one icon column, one text column */
+  .hero__foot { background: transparent; border-top: 0; }
   .hero__foot-row {
-    display: grid; grid-template-columns: 1fr auto; align-items: center;
-    row-gap: 8px; column-gap: 16px; padding-block: 14px 16px; font-size: 0.92rem;
+    display: grid; grid-template-columns: 1fr; row-gap: 12px; min-height: 0;
+    padding-block: 18px 0; border-top: 1px solid rgba(238, 241, 235, 0.2); font-size: 0.97rem;
   }
-  .hero__foot-row .status { grid-column: 1 / -1; }
-  .hero__phone { margin-left: 0; justify-self: end; }
+  .hero__foot-row > * { display: flex; align-items: center; gap: 12px; margin: 0; }
+  .hero__foot-row .status__dot { margin-inline: 4px; }
+  .hero__foot-row svg { flex: none; }
+  .hero__phone { margin-left: 0; }
   .facts { grid-template-columns: 1fr; }
   .dishes { grid-template-columns: 1fr; }
   .form__row, .form__row--3 { grid-template-columns: 1fr; }
