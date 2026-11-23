@@ -1,171 +1,147 @@
-// Admin panel routes: login, bookings, messages, menu editing.
-import { Router } from 'express';
-import rateLimit from 'express-rate-limit';
-import { db, toMenuItem } from '../db.js';
-import { adminEnabled } from '../config.js';
-import { passwordMatches, issueToken, requireAdmin } from '../auth.js';
-import { menuItemSchema, statusSchemas, fieldErrors } from '../validation.js';
-import { emailAlertsEnabled } from '../notify.js';
+// Staff panel routes: login, bookings, messages, menu editing.
+import { json, error, noContent, readJson, isRateLimited, toId } from '../http.js';
+import { toMenuItem } from '../db.js';
+import { adminEnabled, passwordMatches, issueToken, requireAdmin, NOT_SET_UP } from '../auth.js';
+import { validateMenuItem, RES_STATUSES, MSG_STATUSES } from '../validation.js';
 
-const router = Router();
+const IST_TODAY = `date('now','+330 minutes')`;
 
-const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 6,
-  standardHeaders: 'draft-7',
-  legacyHeaders: false,
-  message: { error: 'Too many login attempts. Try again in 15 minutes.' },
-});
+export async function handleAdmin(request, env, path, url) {
+  const { method } = request;
+  const db = env.DB;
 
-router.post('/login', loginLimiter, (req, res) => {
-  if (!adminEnabled) {
-    return res.status(503).json({ error: 'Admin login is not set up. Add ADMIN_PASSWORD and JWT_SECRET to backend/.env.' });
+  /* ---------- login (no token needed) ---------- */
+  if (path === '/login' && method === 'POST') {
+    if (!adminEnabled(env)) return error(503, NOT_SET_UP);
+    if (await isRateLimited(env.LOGIN_LIMITER, request, 'login')) return error(429, 'Too many login attempts. Try again in a minute.');
+    const body = await readJson(request);
+    if (!(await passwordMatches(env, body.password))) return error(401, 'That password is not correct.');
+    return json({ token: await issueToken(env) });
   }
-  if (!passwordMatches(req.body?.password ?? '')) {
-    return res.status(401).json({ error: 'That password is not correct.' });
+
+  await requireAdmin(request, env);
+
+  /* ---------- overview ---------- */
+  if (path === '/summary' && method === 'GET') {
+    const count = (sql) => db.prepare(sql).first('n');
+    const [newReservations, upcoming, newMessages, menuItems, sampleItems] = await Promise.all([
+      count(`SELECT COUNT(*) AS n FROM reservations WHERE status = 'new'`),
+      count(`SELECT COUNT(*) AS n FROM reservations WHERE status IN ('new','confirmed') AND date >= ${IST_TODAY}`),
+      count(`SELECT COUNT(*) AS n FROM messages WHERE status = 'new'`),
+      count(`SELECT COUNT(*) AS n FROM menu_items`),
+      count(`SELECT COUNT(*) AS n FROM menu_items WHERE is_sample = 1`),
+    ]);
+    return json({ newReservations, upcoming, newMessages, menuItems, sampleItems, emailAlerts: false });
   }
-  res.json({ token: issueToken() });
-});
 
-router.use(requireAdmin);
-
-const idParam = (req, res) => {
-  const id = Number(req.params.id);
-  if (!Number.isInteger(id) || id < 1) {
-    res.status(400).json({ error: 'Invalid id.' });
-    return null;
+  /* ---------- reservations ---------- */
+  if (path === '/reservations' && method === 'GET') {
+    const status = url.searchParams.get('status');
+    const when = url.searchParams.get('when');
+    const where = [];
+    const binds = [];
+    if (status && status !== 'all' && RES_STATUSES.includes(status)) {
+      where.push('status = ?');
+      binds.push(status);
+    }
+    if (when === 'upcoming') where.push(`date >= ${IST_TODAY}`);
+    if (when === 'past') where.push(`date < ${IST_TODAY}`);
+    const order = when === 'past' ? 'date DESC, time DESC' : 'date ASC, time ASC';
+    const sql = `SELECT * FROM reservations ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY ${order} LIMIT 500`;
+    const { results } = await db.prepare(sql).bind(...binds).all();
+    return json(results);
   }
-  return id;
-};
 
-/* ---------- overview ---------- */
-router.get('/summary', (_req, res) => {
-  const one = (sql) => db.prepare(sql).get().n;
-  res.json({
-    newReservations: one(`SELECT COUNT(*) n FROM reservations WHERE status = 'new'`),
-    upcoming: one(`SELECT COUNT(*) n FROM reservations WHERE status IN ('new','confirmed') AND date >= date('now','+330 minutes')`),
-    newMessages: one(`SELECT COUNT(*) n FROM messages WHERE status = 'new'`),
-    menuItems: one(`SELECT COUNT(*) n FROM menu_items`),
-    sampleItems: one(`SELECT COUNT(*) n FROM menu_items WHERE is_sample = 1`),
-    emailAlerts: emailAlertsEnabled,
-  });
-});
-
-/* ---------- reservations ---------- */
-router.get('/reservations', (req, res) => {
-  const { status, when } = req.query;
-  const where = [];
-  const params = {};
-  if (typeof status === 'string' && status !== 'all') {
-    where.push('status = $status');
-    params.status = status;
+  let m = path.match(/^\/reservations\/([^/]+)$/);
+  if (m) {
+    const id = toId(m[1]);
+    if (!id) return error(400, 'Invalid id.');
+    if (method === 'PATCH') {
+      const { status } = await readJson(request);
+      if (!RES_STATUSES.includes(status)) return error(422, 'Unknown status.');
+      const res = await db.prepare('UPDATE reservations SET status = ? WHERE id = ?').bind(status, id).run();
+      if (!res.meta.changes) return error(404, 'Booking not found.');
+      return json(await db.prepare('SELECT * FROM reservations WHERE id = ?').bind(id).first());
+    }
+    if (method === 'DELETE') {
+      const res = await db.prepare('DELETE FROM reservations WHERE id = ?').bind(id).run();
+      if (!res.meta.changes) return error(404, 'Booking not found.');
+      return noContent();
+    }
   }
-  if (when === 'upcoming') where.push(`date >= date('now','+330 minutes')`);
-  if (when === 'past') where.push(`date < date('now','+330 minutes')`);
-  const order = when === 'past' ? 'date DESC, time DESC' : 'date ASC, time ASC';
-  const rows = db
-    .prepare(`SELECT * FROM reservations ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY ${order} LIMIT 500`)
-    .all(params);
-  res.json(rows);
-});
 
-router.patch('/reservations/:id', (req, res) => {
-  const id = idParam(req, res);
-  if (!id) return;
-  const parsed = statusSchemas.reservation.safeParse(req.body ?? {});
-  if (!parsed.success) return res.status(422).json({ error: 'Unknown status.' });
-  const info = db.prepare('UPDATE reservations SET status = ? WHERE id = ?').run(parsed.data.status, id);
-  if (!info.changes) return res.status(404).json({ error: 'Booking not found.' });
-  res.json(db.prepare('SELECT * FROM reservations WHERE id = ?').get(id));
-});
+  /* ---------- messages ---------- */
+  if (path === '/messages' && method === 'GET') {
+    const status = url.searchParams.get('status');
+    const stmt =
+      status && status !== 'all' && MSG_STATUSES.includes(status)
+        ? db.prepare('SELECT * FROM messages WHERE status = ? ORDER BY created_at DESC LIMIT 500').bind(status)
+        : db.prepare('SELECT * FROM messages ORDER BY created_at DESC LIMIT 500');
+    const { results } = await stmt.all();
+    return json(results);
+  }
 
-router.delete('/reservations/:id', (req, res) => {
-  const id = idParam(req, res);
-  if (!id) return;
-  const info = db.prepare('DELETE FROM reservations WHERE id = ?').run(id);
-  if (!info.changes) return res.status(404).json({ error: 'Booking not found.' });
-  res.status(204).end();
-});
+  m = path.match(/^\/messages\/([^/]+)$/);
+  if (m) {
+    const id = toId(m[1]);
+    if (!id) return error(400, 'Invalid id.');
+    if (method === 'PATCH') {
+      const { status } = await readJson(request);
+      if (!MSG_STATUSES.includes(status)) return error(422, 'Unknown status.');
+      const res = await db.prepare('UPDATE messages SET status = ? WHERE id = ?').bind(status, id).run();
+      if (!res.meta.changes) return error(404, 'Message not found.');
+      return json(await db.prepare('SELECT * FROM messages WHERE id = ?').bind(id).first());
+    }
+    if (method === 'DELETE') {
+      const res = await db.prepare('DELETE FROM messages WHERE id = ?').bind(id).run();
+      if (!res.meta.changes) return error(404, 'Message not found.');
+      return noContent();
+    }
+  }
 
-/* ---------- messages ---------- */
-router.get('/messages', (req, res) => {
-  const { status } = req.query;
-  const rows =
-    typeof status === 'string' && status !== 'all'
-      ? db.prepare('SELECT * FROM messages WHERE status = ? ORDER BY created_at DESC LIMIT 500').all(status)
-      : db.prepare('SELECT * FROM messages ORDER BY created_at DESC LIMIT 500').all();
-  res.json(rows);
-});
+  /* ---------- menu ---------- */
+  if (path === '/menu' && method === 'GET') {
+    const { results } = await db.prepare('SELECT * FROM menu_items ORDER BY category, sort_order, id').all();
+    return json(results.map(toMenuItem));
+  }
 
-router.patch('/messages/:id', (req, res) => {
-  const id = idParam(req, res);
-  if (!id) return;
-  const parsed = statusSchemas.message.safeParse(req.body ?? {});
-  if (!parsed.success) return res.status(422).json({ error: 'Unknown status.' });
-  const info = db.prepare('UPDATE messages SET status = ? WHERE id = ?').run(parsed.data.status, id);
-  if (!info.changes) return res.status(404).json({ error: 'Message not found.' });
-  res.json(db.prepare('SELECT * FROM messages WHERE id = ?').get(id));
-});
+  if (path === '/menu' && method === 'POST') {
+    const { data, fields } = validateMenuItem(await readJson(request));
+    if (fields) return error(422, 'Please check the highlighted fields.', fields);
+    const row = await db
+      .prepare(
+        `INSERT INTO menu_items (category, name, description, price, unit, is_signature, is_available, sort_order)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING *`,
+      )
+      .bind(data.category, data.name, data.description, data.price, data.unit, data.is_signature, data.is_available, data.sort_order)
+      .first();
+    return json(toMenuItem(row), 201);
+  }
 
-router.delete('/messages/:id', (req, res) => {
-  const id = idParam(req, res);
-  if (!id) return;
-  const info = db.prepare('DELETE FROM messages WHERE id = ?').run(id);
-  if (!info.changes) return res.status(404).json({ error: 'Message not found.' });
-  res.status(204).end();
-});
+  m = path.match(/^\/menu\/([^/]+)$/);
+  if (m) {
+    const id = toId(m[1]);
+    if (!id) return error(400, 'Invalid id.');
+    if (method === 'PUT') {
+      const { data, fields } = validateMenuItem(await readJson(request));
+      if (fields) return error(422, 'Please check the highlighted fields.', fields);
+      const row = await db
+        .prepare(
+          `UPDATE menu_items SET category = ?, name = ?, description = ?, price = ?, unit = ?, is_signature = ?,
+             is_available = ?, sort_order = ?, is_sample = 0, updated_at = datetime('now')
+           WHERE id = ? RETURNING *`,
+        )
+        .bind(data.category, data.name, data.description, data.price, data.unit, data.is_signature, data.is_available, data.sort_order, id)
+        .first();
+      if (!row) return error(404, 'Menu item not found.');
+      return json(toMenuItem(row));
+    }
+    if (method === 'DELETE') {
+      const res = await db.prepare('DELETE FROM menu_items WHERE id = ?').bind(id).run();
+      if (!res.meta.changes) return error(404, 'Menu item not found.');
+      return noContent();
+    }
+  }
 
-/* ---------- menu ---------- */
-router.get('/menu', (_req, res) => {
-  res.json(db.prepare('SELECT * FROM menu_items ORDER BY category, sort_order, id').all().map(toMenuItem));
-});
-
-const menuParams = (d) => ({
-  category: d.category,
-  name: d.name,
-  description: d.description,
-  price: d.price,
-  unit: d.unit,
-  is_signature: d.is_signature ? 1 : 0,
-  is_available: d.is_available ? 1 : 0,
-  sort_order: d.sort_order,
-});
-
-router.post('/menu', (req, res) => {
-  const parsed = menuItemSchema.safeParse(req.body ?? {});
-  if (!parsed.success) return res.status(422).json({ error: 'Please check the highlighted fields.', fields: fieldErrors(parsed.error) });
-  const info = db
-    .prepare(
-      `INSERT INTO menu_items (category, name, description, price, unit, is_signature, is_available, sort_order)
-       VALUES ($category, $name, $description, $price, $unit, $is_signature, $is_available, $sort_order)`,
-    )
-    .run(menuParams(parsed.data));
-  res.status(201).json(toMenuItem(db.prepare('SELECT * FROM menu_items WHERE id = ?').get(info.lastInsertRowid)));
-});
-
-router.put('/menu/:id', (req, res) => {
-  const id = idParam(req, res);
-  if (!id) return;
-  const parsed = menuItemSchema.safeParse(req.body ?? {});
-  if (!parsed.success) return res.status(422).json({ error: 'Please check the highlighted fields.', fields: fieldErrors(parsed.error) });
-  const info = db
-    .prepare(
-      `UPDATE menu_items SET category = $category, name = $name, description = $description, price = $price,
-         unit = $unit, is_signature = $is_signature, is_available = $is_available, sort_order = $sort_order,
-         is_sample = 0, updated_at = datetime('now')
-       WHERE id = $id`,
-    )
-    .run({ ...menuParams(parsed.data), id });
-  if (!info.changes) return res.status(404).json({ error: 'Menu item not found.' });
-  res.json(toMenuItem(db.prepare('SELECT * FROM menu_items WHERE id = ?').get(id)));
-});
-
-router.delete('/menu/:id', (req, res) => {
-  const id = idParam(req, res);
-  if (!id) return;
-  const info = db.prepare('DELETE FROM menu_items WHERE id = ?').run(id);
-  if (!info.changes) return res.status(404).json({ error: 'Menu item not found.' });
-  res.status(204).end();
-});
-
-export default router;
+  return error(404, 'Not found.');
+}

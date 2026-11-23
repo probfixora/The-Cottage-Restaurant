@@ -369,7 +369,7 @@ export default function Admin() {
         {summary && (
           <p className="adm-summary">
             <b>{summary.upcoming}</b> upcoming {summary.upcoming === 1 ? 'booking' : 'bookings'}, <b>{summary.newReservations}</b> waiting for a call, <b>{summary.newMessages}</b> new {summary.newMessages === 1 ? 'message' : 'messages'}.
-            {!summary.emailAlerts && <span className="adm-muted"> Email alerts are off; add SMTP settings in backend/.env to get them.</span>}
+            {!summary.emailAlerts && <span className="adm-muted"> Email alerts for new bookings aren’t set up yet; check this panel for new requests.</span>}
           </p>
         )}
         {tab === 'bookings' && <Bookings {...props} />}

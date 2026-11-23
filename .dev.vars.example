@@ -1,0 +1,10 @@
+# Local development secrets for `wrangler dev`.
+# Copy this file to .dev.vars (which git ignores) and fill in your own values.
+# On Cloudflare, add the same two names as Secrets on the Worker instead.
+
+# Staff panel password (open /admin). At least 10 characters.
+ADMIN_PASSWORD=change-me-to-a-long-password
+
+# Any long random string, at least 24 characters. Generate one with:
+#   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+JWT_SECRET=replace-with-a-long-random-string

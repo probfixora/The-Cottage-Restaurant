@@ -1,0 +1,41 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Must match the Worker's name in the Cloudflare dashboard.
+  "name": "the-cottage-restaurant",
+  "main": "backend/src/index.js",
+  "compatibility_date": "2026-11-19",
+
+  // The built React site. /api/* goes to the Worker first; every other
+  // path is a file from frontend/dist, with index.html as the SPA fallback.
+  "assets": {
+    "directory": "./frontend/dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+
+  // Bookings, messages and menu. Cloudflare creates this database on the
+  // first deploy; tables are created by the Worker on its first request.
+  "d1_databases": [
+    { "binding": "DB", "database_name": "the-cottage-db" }
+  ],
+
+  // Spam protection for the forms and the staff login.
+  "ratelimits": [
+    { "name": "FORM_LIMITER", "namespace_id": "1001", "simple": { "limit": 10, "period": 60 } },
+    { "name": "LOGIN_LIMITER", "namespace_id": "1002", "simple": { "limit": 5, "period": 60 } }
+  ],
+
+  // Used by `wrangler dev` / `wrangler deploy` on your own computer.
+  // (Cloudflare's GitHub builds ignore this, so set the build command in the dashboard too.)
+  "build": {
+    "command": "npm --prefix frontend run build",
+    "watch_dir": "frontend/src"
+  },
+
+  "observability": { "enabled": true }
+
+  // Secrets (never put them in this file):
+  //   ADMIN_PASSWORD and JWT_SECRET → Cloudflare dashboard → Worker → Settings → Variables and Secrets
+  //   For local development put them in a .dev.vars file next to this one.
+}

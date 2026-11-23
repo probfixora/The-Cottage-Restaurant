@@ -7,7 +7,7 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     // Forward API calls to the backend during development
-    proxy: { '/api': 'http://localhost:5050' },
+    proxy: { '/api': 'http://localhost:8787' },
   },
   build: {
     rollupOptions: {
