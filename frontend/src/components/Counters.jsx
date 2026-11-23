@@ -68,13 +68,24 @@ export default function Counters({ onPickMenu }) {
                   <span className="counter__title">{c.title}</span>
                 </button>
                 <div className="counter__body" id={`counter-${c.id}`} hidden={!isActive}>
-                  <img className="counter__photo" src={src(c.photo)} srcSet={srcSet(c.photo)} sizes="92vw" width="960" height="1200" alt={c.alt} loading="lazy" decoding="async" />
+                  {/* Phones: a wide 4:3 photo, so it never fills more than half the screen */}
+                  <img
+                    className="counter__photo"
+                    src={`/images/gallery/c-${c.id}.webp`}
+                    srcSet={`/images/gallery/c-${c.id}-640.webp 640w, /images/gallery/c-${c.id}.webp 1200w`}
+                    sizes="92vw"
+                    width="1200"
+                    height="900"
+                    alt={c.alt}
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <p>{c.text}</p>
                   <p className="counter__good">
                     <strong>Good for:</strong> {c.good}
                   </p>
                   <button type="button" className="link-btn" onClick={() => seeMenu(c.id)}>
-                    See the {c.title.toLowerCase()} menu
+                    See the {c.id === 'sweets' ? c.title : c.title.toLowerCase()} menu
                     <ArrowDown size={16} strokeWidth={2} aria-hidden="true" />
                   </button>
                 </div>

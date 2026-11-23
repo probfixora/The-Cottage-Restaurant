@@ -322,7 +322,7 @@
   .story__inset { width: 42%; border-width: 5px; }
   .counters__grid { grid-template-areas: 'intro' 'list'; row-gap: 0; }
   .counters__frame { display: none; }
-  .counter__photo { display: block; width: 100%; max-width: 440px; margin: 0 auto 18px; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 10px; }
+  .counter__photo { display: block; width: 100%; height: auto; margin: 0 0 18px; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; }
   .visit__map { max-width: 520px; width: 100%; }
   .quote-box { min-height: 0; }
   .footer__grid { row-gap: 28px; column-gap: 16px; }
@@ -331,7 +331,8 @@
   .footer__contact { grid-column: 6 / span 7; font-size: 0.95rem; }
   .footer__contact a { align-items: flex-start; }
   .footer__contact svg { margin-top: 3px; flex: none; }
-  .footer__base { flex-direction: column; align-items: flex-start; }
+  .footer__base { flex-direction: column; align-items: stretch; }
+  .footer__staff { align-self: flex-end; }
   .slide { width: 74vw; }
   .spaces__controls { width: 100%; }
   .spaces__count { margin-right: auto; text-align: left; }
@@ -340,7 +341,12 @@
 @media (max-width: 760px) {
   :root { --nav-h: 64px; }
   .nav__call, .nav__actions .btn--brass { display: none; }
-  .brand__name { font-size: 1.3rem; }
+  .brand__name { font-size: 1.55rem; }
+  .brand__by { font-size: 0.9rem; }
+  .brand__mark { width: 32px; height: 39px; }
+  /* Shorter hero on phones: less empty photo between the top bar and the title */
+  .hero { min-height: max(520px, 76svh); }
+  .hero__inner { padding-top: calc(var(--nav-h) + 24px); }
   .hero__inner { padding-bottom: 28px; }
   .hero__actions .btn { flex: 1 1 auto; }
   .hero__foot-row { column-gap: 20px; font-size: 0.92rem; }
